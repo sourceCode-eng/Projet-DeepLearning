@@ -1,0 +1,7 @@
+cv2
+gdown
+numpy
+seaborn
+tensorflow
+matplotlib
+scikit-learn
