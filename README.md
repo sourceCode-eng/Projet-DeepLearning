@@ -198,20 +198,179 @@ Matrices de Confusion : Les résultats de True Positive, True Negative, False Po
 indiquent que le modèle avec augmentation de données a de meilleures performances globales.
 Conclusion :
 Le modèle avec augmentation de données semble être meilleur, car il atteint une meilleure
-convergence, évite le suraj
+convergence, évite le surajjustement, et offre de meilleures performances en termes de précision et de
+matrices de confusion.
 
 ### Transfer learning avec VGG (unfrozen base) avec et sans data augmentation
-Your content here...
+
+** code **
+```
+# Charger le modèle VGG16 avec une base dégelée
+vgg_base_unfrozen = VGG16(weights='imagenet', include_top=False, input_shape=(128, 128, 3))
+# Créer un modèle séquentiel avec la base VGG16 dégelée
+transfer_vgg_unfrozen = Sequential([
+ vgg_base_unfrozen,
+ Flatten(),
+ Dense(256, activation='relu'),
+ Dense(128, activation='relu'),
+ Dense(2, activation='softmax')
+])
+# Dégel des dernières couches de la base VGG16 pour fine-tuning
+for layer in transfer_vgg_unfrozen.layers[0].layers[-5:]:
+ layer.trainable = True
+# Compiler le modèle
+transfer_vgg_unfrozen.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+# Entraîner le modèle
+history_transfer_vgg_unfrozen = transfer_vgg_unfrozen.fit(train_data, epochs=epochs,
+validation_data=test_data)
+```
+
+**Description du code **
+Chargement de la base VGG16 dégelée : La première étape consiste à charger la base VGG16 préentrainée à partir de l'ensemble de données ImageNet tout en excluant la couche fully connected
+(include_top=False) et en spécifiant la forme d'entrée.
+Création du modèle séquentiel : On crée un modèle séquentiel auquel on ajoute la base VGG16 dégelée,
+suivi d'une couche Flatten pour aplatir les features et des couches fully connected personnalisées pour
+la classification.
+Dégel des dernières couches : On dégèle les dernières couches de la base VGG16 en itérant sur les
+dernières couches du modèle et en les marquant comme entraînables. Cela permet d'ajuster les poids
+de ces couches pendant l'entraînement.
+Compilation du modèle : On compile le modèle en spécifiant l'optimiseur, la fonction de perte et les
+métriques.
+Entraînement du modèle : On entraîne le modèle sur les données d'entraînement avec le jeu de
+validation.
+**Comparaison**
+Code : Les deux modèles utilisent la même architecture de base VGG16 avec des couches
+supplémentaires adaptées à la tâche spécifique.
+Architecture : La seule différence réside dans l'utilisation ou non de l'augmentation de données.
+L'augmentation de données permet généralement de régulariser le modèle et d'améliorer la
+généralisation en introduisant une variabilité supplémentaire dans les données d'entraînement.
+Résultats : Les résultats d'évaluation montrent que le modèle avec augmentation de données a
+tendance à mieux généraliser, avec des valeurs de perte et d'accuracy plus stables sur les données de
+test. Cependant, le modèle sans augmentation de données atteint également de bonnes performances.
+Conclusion : L'utilisation de l'augmentation de données semble bénéfique dans ce scénario, car elle aide
+le modèle à mieux généraliser aux données de test. Cela peut être particulièrement utile lorsque la taille
+du jeu de données est limitée.
 
 ### Transfer Learning using ResNet50 avec et sans data augmentation
-Your content here...
+
+**Code**
+```
+#Chargement du modèle pré-entraîné
+#Utilisation de ResNet50 avec weights='imagenet' pour charger les poids pré-entraînés sur ImageNet.
+base_model = ResNet50(weights='imagenet', include_top=False, input_shape=(img_height, img_width,3))
+#Construction du modèle de transfert d'apprentissage :
+#Ajout de nouvelles couches au-dessus du modèle de base.
+#Gel des couches du modèle de base pour éviter la mise à jour des poids pré-entraînés lors del'entraînement initial.
+model = models.Sequential()
+model.add(base_model)
+model.add(layers.Flatten())
+model.add(layers.Dense(256, activation='relu'))
+model.add(layers.Dropout(0.5))
+model.add(layers.Dense(num_classes, activation='softmax'))
+```
+**Comparaison**
+Les deux modèles montrent de bonnes performances en termes de diminution de la perte et
+d'augmentation de la précision.
+Le modèle avec augmentation de données a une précision de test plus élevée (0.94) par rapport au
+modèle sans augmentation (0.93).
+Les deux modèles semblent bien généraliser, mais le modèle avec augmentation de données a une
+meilleure capacité à reconnaître des motifs plus variés et complexes dans les données de test.
+**Choix**
+Dans la plupart des cas, le modèle avec augmentation de données est préférable car il offre
+généralement une meilleure généralisation et une résilience accrue face à la variabilité des données.
 
 ### Quel est le meilleur modèle pour transfert learning
-Your content here...
+
+Le choix du meilleur modèle pour le transfert d'apprentissage dépend des caractéristiques spécifiques
+de la tâche et des données disponibles. Cependant, voici résumé sur les modèles étudiés :
+**VGG (Frozen Base) avec Augmentation de Données :**
+Points forts : Bonne précision d'entraînement et de test, augmentation de données pour améliorer la
+généralisation.
+Points faibles : La courbe de test loss montre une certaine oscillation, mais cela peut être acceptable en
+fonction du seuil de tolérance pour la performance.
+**VGG (Frozen Base) sans Augmentation de Données :**
+Points forts : Haute précision d'entraînement.
+Points faibles : La courbe de test loss oscille, ce qui peut indiquer une certaine instabilité. La
+performance de test atteint une précision décente.
+**VGG (Unfrozen Base) avec Augmentation de Données :**
+Points forts : Bonne précision d'entraînement et de test, augmentation de données pour améliorer la
+généralisation.
+Points faibles : La courbe de test loss montre une certaine oscillation, mais la performance est
+généralement bonne.
+**VGG (Unfrozen Base) sans Augmentation de Données :**
+Points forts : Haute précision d'entraînement.
+Points faibles : La courbe de test loss oscille, mais la performance de test atteint une précision décente.
+**ResNet (Frozen Base) avec Augmentation de Données :**
+Points forts : Bonne précision d'entraînement et de test, augmentation de données pour améliorer la
+généralisation.
+Points faibles : La courbe de test loss montre une certaine oscillation, mais la performance est
+globalement bonne.
+**ResNet (Frozen Base) sans Augmentation de Données :**
+Points forts : Haute précision d'entraînement.
+Points faibles : La courbe de test loss oscille, mais la performance de test atteint une précision décente
 
 ## Comparaison des modèles
 ### Pour le cas sans augmentation de données
-Your content here...
+
+L'examen de la courbe d'amélioration de l'accuracy d'entraînement à travers les epochs offre des
+insights significatifs sur les performances des différents modèles. Le modèle CNN simple se distingue
+avec une accuracy remarquablement élevée de 0.98, suggérant une capacité exceptionnelle à apprendre
+et à s'adapter aux caractéristiques des données d'entraînement. Cette performance élevée peut être
+attribuée à la capacité intrinsèque des CNN à extraire des motifs spatiaux et hiérarchiques dans les
+données, ce qui se traduit par une représentation plus riche et discriminante des caractéristiques.
+D'un autre côté, le modèle ANN complexe affiche une accuracy d'entraînement relativement plus faible,
+plafonnant à 0.9. Cette observation pourrait indiquer que l'architecture plus complexe du réseau de
+neurones n'a pas nécessairement conduit à une amélioration significative de la capacité d'apprentissage
+sur les données d'entraînement. Il est possible que la complexité accrue du modèle ne se traduise pas
+toujours par des performances supérieures, et cela peut également être dû à des contraintes de
+données ou d'autres facteurs spécifiques au problème.
+16
+L'analyse des courbes d'amélioration de la précision de transfert sur la validation, en particulier dans le
+contexte de modèles VGG simple et ANN complexe sans augmentation de données, révèle des
+tendances significatives.
+Le modèle simple VGG affiche une performance exceptionnelle avec une précision de transfert sur la
+validation atteignant 0.98. Cette excellente précision peut être attribuée à l'efficacité de l'architecture
+VGG dans l'extraction de caractéristiques complexes des données, même sans l'ajout de données
+augmentées. La simplicité de l'architecture VGG, combinée à la puissance des couches convolutives,
+semble être un atout dans ce contexte, permettant au modèle de généraliser efficacement sur les
+données de validation.
+D'autre part, le modèle ANN complexe présente une précision de transfert sur la validation légèrement
+inférieure, évaluée à 0.88. Cette différence peut s'expliquer par la complexité accrue du modèle ANN et
+sa sensibilité potentielle au surajustement. La précision légèrement inférieure peut être due à la
+difficulté du modèle à généraliser de manière optimale sur les données de validation, en particulier sans
+l'utilisation de données augmentées.
+17
+Le tranffert_vgg model , tranffert_vgg model_unfrozen et transfert_resnet_model présentent les
+d’époches les plus élevéé puisqu’ils possèdent le nombre de paramètres les plus élevés comme le
+montre le diagramme suivant
 
 ### Pour le cas avec augmentation de données
-Your content here...
+
+Les courbes d'apprentissage sont des outils essentiels pour évaluer les performances des modèles de
+machine learning au fil des epochs. Dans le cadre de cette étude comparative entre le modèle de
+transfert ResNet et le modèle ANN simple, plusieurs observations clés peuvent être extraites de la
+courbe représentant l'amélioration de la précision d'entraînement au fil des epochs.
+Le modèle de transfert ResNet affiche une tendance positive marquée, atteignant une précision
+d'entraînement remarquable de 0.95. Cette performance élevée peut être attribuée à la puissance de la
+méthode de transfert learning, qui permet au modèle de bénéficier des connaissances préalables
+apprises sur des données volumineuses. La capacité du ResNet à extraire des caractéristiques complexes
+à partir des données semble se traduire par une précision accrue au fil de l'entraînement.
+En revanche, le modèle ANN simple présente une performance moins élevée avec une précision
+d'entraînement de 0.83. Cela pourrait indiquer des limitations dans la capacité du modèle à apprendre
+des représentations complexes et des motifs abstraits dans les données, en particulier par rapport à la
+méthode plus sophistiquée de transfert learning utilisée par le ResNet.
+
+Le modèle simple VGG affiche une performance exceptionnelle, atteignant une précision de validation
+maximale de 0.98. Cette observation confirme la robustesse de l'architecture VGG, même dans des
+conditions d'augmentation de données. La capacité du modèle à maintenir une précision élevée
+témoigne de son aptitude à généraliser efficacement sur les données de validation, même lorsque
+celles-ci sont augmentées.
+En revanche, le modèle ANN complexe présente une précision de validation maximale légèrement
+inférieure, évaluée à 0.88. Cette disparité peut être attribuée à la complexité accrue du modèle ANN,
+qui pourrait être plus sensible au surajustement, malgré l'apport bénéfique des données augmentées. La
+nature complexe de l'architecture peut rendre le modèle plus susceptible de varier dans ses
+performances au fil des époques.
+
+Le tranffert_vgg model , tranffert_vgg model_unfrozen et transfert_resnet_model présentent les
+d’époches les plus élevéé puisqu’ils possèdent le nombre de paramètres les plus élevés comme le
+montre le diagramme suivant
