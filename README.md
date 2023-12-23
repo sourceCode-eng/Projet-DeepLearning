@@ -41,22 +41,30 @@
 ## Présentation de la base
 
 Cette base de données est divisée sur deux classes, « with mask», « without mask». 
-teswira
+
+![Example Image](images/class%20names.png)
+
 Elle contient un total de 9000 images réparties en ensembles d’entraînement et de test.
 Chaqu’une composé en deux classes
-teswira
+![Example Image](images/class%20counts.png)
+
 Les données de test sont composés comme suit :
-teswira
+
+![Example Image](images/class%20proportions%20in%20test%20data.png)
+
 Les données d’entrainement sont présentés comme suit :
-teswira
+
+![Example Image](images/class%20proportions%20in%20train%20data.png)
 
 ## Visualiser quelques données
 
 ### Visualisation des données d’entrainement
-teswira
+
+![Example Image](images/8%20examples%20from%20train%20data.png)
 
 ### Visualisation des données de test
-teswira
+
+![Example Image](images/8%20examples%20from%20test%20data.png)
 
 ## Modèle from scratch
 
@@ -312,6 +320,8 @@ Points faibles : La courbe de test loss oscille, mais la performance de test att
 ## Comparaison des modèles
 ### Pour le cas sans augmentation de données
 
+![Example Image](images/Training%20accuracy%20improvement%20through%20epochs%20without%20data%20augmentation.png)
+
 L'examen de la courbe d'amélioration de l'accuracy d'entraînement à travers les epochs offre des
 insights significatifs sur les performances des différents modèles. Le modèle CNN simple se distingue
 avec une accuracy remarquablement élevée de 0.98, suggérant une capacité exceptionnelle à apprendre
@@ -324,7 +334,9 @@ neurones n'a pas nécessairement conduit à une amélioration significative de l
 sur les données d'entraînement. Il est possible que la complexité accrue du modèle ne se traduise pas
 toujours par des performances supérieures, et cela peut également être dû à des contraintes de
 données ou d'autres facteurs spécifiques au problème.
-16
+
+![Example Image](images/Validation%20accuracy%20improvement%20through%20epochs%20without%20data%20augmentation.png)
+
 L'analyse des courbes d'amélioration de la précision de transfert sur la validation, en particulier dans le
 contexte de modèles VGG simple et ANN complexe sans augmentation de données, révèle des
 tendances significatives.
@@ -339,12 +351,18 @@ inférieure, évaluée à 0.88. Cette différence peut s'expliquer par la comple
 sa sensibilité potentielle au surajustement. La précision légèrement inférieure peut être due à la
 difficulté du modèle à généraliser de manière optimale sur les données de validation, en particulier sans
 l'utilisation de données augmentées.
-17
+
+![Example Image](images/epoch%20times%20for%20each%20model%20without%20data%20augmentation.png)
+
 Le tranffert_vgg model , tranffert_vgg model_unfrozen et transfert_resnet_model présentent les
 d’époches les plus élevéé puisqu’ils possèdent le nombre de paramètres les plus élevés comme le
 montre le diagramme suivant
 
+![Example Image](images/number%20of%20parameters%20in%20each%20model%20without%20data%20augmentation.png)
+
 ### Pour le cas avec augmentation de données
+
+![Example Image](images/Training%20accuracy%20improvement%20through%20epochs%20with%20data%20augmentation.png)
 
 Les courbes d'apprentissage sont des outils essentiels pour évaluer les performances des modèles de
 machine learning au fil des epochs. Dans le cadre de cette étude comparative entre le modèle de
@@ -360,17 +378,29 @@ d'entraînement de 0.83. Cela pourrait indiquer des limitations dans la capacit�
 des représentations complexes et des motifs abstraits dans les données, en particulier par rapport à la
 méthode plus sophistiquée de transfert learning utilisée par le ResNet.
 
+![Example Image](images/Validation%20accuracy%20improvement%20through%20epochs%20with%20data%20augmentation.png)
+
+
 Le modèle simple VGG affiche une performance exceptionnelle, atteignant une précision de validation
 maximale de 0.98. Cette observation confirme la robustesse de l'architecture VGG, même dans des
 conditions d'augmentation de données. La capacité du modèle à maintenir une précision élevée
 témoigne de son aptitude à généraliser efficacement sur les données de validation, même lorsque
 celles-ci sont augmentées.
+
+
+
 En revanche, le modèle ANN complexe présente une précision de validation maximale légèrement
 inférieure, évaluée à 0.88. Cette disparité peut être attribuée à la complexité accrue du modèle ANN,
 qui pourrait être plus sensible au surajustement, malgré l'apport bénéfique des données augmentées. La
 nature complexe de l'architecture peut rendre le modèle plus susceptible de varier dans ses
 performances au fil des époques.
 
+![Example Image](images/epoch%20times%20for%20each%20model%20with%20data%20augmentation.png)
+
+
 Le tranffert_vgg model , tranffert_vgg model_unfrozen et transfert_resnet_model présentent les
 d’époches les plus élevéé puisqu’ils possèdent le nombre de paramètres les plus élevés comme le
 montre le diagramme suivant
+
+![Example Image](images/number%20of%20parameters%20in%20each%20model%20with%20data%20augmentation.png)
+
