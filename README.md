@@ -261,7 +261,7 @@ du jeu de données est limitée.
 
 ### Transfer Learning using ResNet50 avec et sans data augmentation
 
-**Code**
+#### Code
 ```
 #Chargement du modèle pré-entraîné
 #Utilisation de ResNet50 avec weights='imagenet' pour charger les poids pré-entraînés sur ImageNet.
@@ -276,18 +276,18 @@ model.add(layers.Dense(256, activation='relu'))
 model.add(layers.Dropout(0.5))
 model.add(layers.Dense(num_classes, activation='softmax'))
 ```
-**Comparaison**
+#### Comparaison
 Les deux modèles montrent de bonnes performances en termes de diminution de la perte et
 d'augmentation de la précision.
 Le modèle avec augmentation de données a une précision de test plus élevée (0.94) par rapport au
 modèle sans augmentation (0.93).
 Les deux modèles semblent bien généraliser, mais le modèle avec augmentation de données a une
 meilleure capacité à reconnaître des motifs plus variés et complexes dans les données de test.
-**Choix**
+#### Choix
 Dans la plupart des cas, le modèle avec augmentation de données est préférable car il offre
 généralement une meilleure généralisation et une résilience accrue face à la variabilité des données.
 
-### Quel est le meilleur modèle pour transfert learning
+### Quel est le meilleur modele pour transfert learning
 
 Le choix du meilleur modèle pour le transfert d'apprentissage dépend des caractéristiques spécifiques
 de la tâche et des données disponibles. Cependant, voici résumé sur les modèles étudiés :
@@ -317,8 +317,8 @@ globalement bonne.
 Points forts : Haute précision d'entraînement.
 Points faibles : La courbe de test loss oscille, mais la performance de test atteint une précision décente
 
-## Comparaison des modèles
-### Pour le cas sans augmentation de données
+## Comparaison des modeles
+### Pour le cas sans augmentation de donnees
 
 ![Example Image](images/Training%20accuracy%20improvement%20through%20epochs%20without%20data%20augmentation.png)
 
@@ -360,7 +360,7 @@ montre le diagramme suivant
 
 ![Example Image](images/number%20of%20parameters%20in%20each%20model%20without%20data%20augmentation.png)
 
-### Pour le cas avec augmentation de données
+### Pour le cas avec augmentation de donnees
 
 ![Example Image](images/Training%20accuracy%20improvement%20through%20epochs%20with%20data%20augmentation.png)
 
